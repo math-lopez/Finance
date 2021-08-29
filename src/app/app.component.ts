@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { EntryService } from './pages/entries/shared/entry.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Finance';
+
+  constructor(private a: EntryService) {
+    this.a.getAll().subscribe(aa => console.log(aa))
+  }
 }
