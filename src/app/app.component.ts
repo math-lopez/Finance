@@ -9,7 +9,5 @@ import { EntryService } from './pages/entries/shared/entry.service';
 export class AppComponent {
   title = 'Finance';
 
-  constructor(private a: EntryService) {
-    this.a.getAll().subscribe(aa => console.log(aa))
-  }
+  constructor(private a: EntryService) { }
 }

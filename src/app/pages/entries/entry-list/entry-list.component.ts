@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Entry } from '../shared/entry.model';
 import { EntryService } from '../shared/entry.service';
 
@@ -11,7 +12,7 @@ export class EntryListComponent implements OnInit {
 
   entries: Entry[] = [];
 
-  constructor(private entryService: EntryService) { }
+  constructor(private entryService: EntryService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.initEntries();
@@ -29,8 +30,11 @@ export class EntryListComponent implements OnInit {
     if (!mustDelete) return;
 
     this.entryService.delete(id).subscribe(
-      resp => this.initEntries(),
-      error => alert("Error in delete entry")
+      resp => {
+        this.initEntries();
+        this.toastr.success("Deleted category");
+      },
+      error => this.toastr.error("Erro in delete entry")
     )
   }
 
