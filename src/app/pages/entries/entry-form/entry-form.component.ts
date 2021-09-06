@@ -56,7 +56,6 @@ export class EntryFormComponent implements OnInit {
   ) {
   }
 
-
   ngOnInit(): void {
     this.setCurrentAction();
     this.buildCategoryForm();
@@ -90,7 +89,6 @@ export class EntryFormComponent implements OnInit {
       }
     )
   }
-
 
   private setCurrentAction() {
     this.route.snapshot.url[0].path == "new" ?

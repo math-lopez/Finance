@@ -44,16 +44,6 @@ export class EntryService {
     )
   }
 
-  // private jsonDataToCategories(jsonData: any[]): Entry[] {
-  //   const entries: Entry[] = [];
-
-  //   jsonData.forEach(e => {
-  //     entries.push(e as Entry)
-  //   });
-
-  //   return entries;
-  // }
-
   private handleError(error: any): Observable<any> {
     console.log(error);
     return throwError(error);
