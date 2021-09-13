@@ -147,10 +147,12 @@ export class EntryFormComponent implements OnInit {
 
   private actionsForError(error: any): void {
     this.toastr.error("Failed insert entry");
+    console.log(error)
     this.submittingForm = false;
   }
 
   private actionForSuccess(cat: Entry): void {
+    console.log(cat)
     this.toastr.success("Entry add success");
     this.router.navigateByUrl('/entries', { skipLocationChange: true }).then(
       () => this.router.navigate(["entries", cat.id, "edit"])

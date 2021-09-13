@@ -1,51 +1,33 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Injectable, Injector } from '@angular/core';
+
 import { Entry } from './entry.model';
+import { BaseResourceService } from 'src/app/shared/services/base-resource-service';
+import { CategoryService } from '../../categories/shared/category.service';
+import { concatMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EntryService {
-  private apiPath: string = "api/entries"
-
-  constructor(private http: HttpClient) { }
-
-  getAll(): Observable<Entry[]> {
-    return this.http.get<Entry[]>(`${this.apiPath}`).pipe(
-      catchError(this.handleError)
-      // map(this.jsonDataToCategories)
-    )
-  }
-
-  getById(id: string | null = '0'): Observable<Entry> {
-    return this.http.get<Entry>(`${this.apiPath}/${id}`).pipe(
-      catchError(this.handleError)
-    )
+export class EntryService extends BaseResourceService<Entry> {
+  constructor(protected injector: Injector, private categoryService: CategoryService) {
+    super("api/entries", injector);
   }
 
   create(entry: Entry): Observable<Entry> {
-    return this.http.post<Entry>(`${this.apiPath}`, entry).pipe(
-      catchError(this.handleError)
-    )
+    return this.setCategoryAndSendToServer(entry, super.create.bind(this))
   }
 
   update(entry: Entry): Observable<Entry> {
-    return this.http.put(`${this.apiPath}`, entry).pipe(
-      catchError(this.handleError),
-      map(() => entry)
-    )
+    return this.setCategoryAndSendToServer(entry, super.update.bind(this))
   }
 
-  delete(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiPath}/${id}`).pipe(
-      catchError(this.handleError)
+  private setCategoryAndSendToServer(entry: Entry, sendFn: any): Observable<any> {
+    return this.categoryService.getById(entry.categoryId).pipe(
+      concatMap(e => {
+        entry.category = e;
+        return sendFn(entry)
+      })
     )
-  }
-
-  private handleError(error: any): Observable<any> {
-    console.log(error);
-    return throwError(error);
   }
 }
