@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, Injector, OnInit } from '@angular/core';
+import { BaseResourceList } from 'src/app/shared/components/base-resource-list.component';
+import { BreadCrumbItem } from 'src/app/shared/components/bread-crumb/bread-crumb.component';
 import { Category } from '../shared/category.model';
 
 import { CategoryService } from '../shared/category.service';
@@ -8,31 +10,9 @@ import { CategoryService } from '../shared/category.service';
   templateUrl: './category-list.component.html',
   styleUrls: ['./category-list.component.css']
 })
-export class CategoryListComponent implements OnInit {
-
-  categories: Category[] = [];
-
-  constructor(private categoryService: CategoryService) { }
-
-  ngOnInit(): void {
-    this.initCategories();
-  }
-
-  initCategories() {
-    this.categoryService.getAll().subscribe(
-      categories => this.categories = categories,
-      error => alert("Error in loading list categories"));
-  }
-
-  deleteCateogry(id: number = 0) {
-    const mustDelete = confirm("Deseja realmente excluir esse item?")
-
-    if (!mustDelete) return;
-
-    this.categoryService.delete(id).subscribe(
-      resp => this.initCategories(),
-      error => alert("Error in delete category")
-    )
+export class CategoryListComponent extends BaseResourceList<Category> {
+  constructor(protected injector: Injector, protected categoryService: CategoryService) {
+    super(injector, categoryService, new Array<Category>())
   }
 
 }
