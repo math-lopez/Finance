@@ -1,33 +1,44 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { switchMap } from 'rxjs/operators';
-import { BaseResourceFormComponent } from 'src/app/shared/components/base-resource-form.component';
-import { Category } from '../../categories/shared/category.model';
-import { CategoryService } from '../../categories/shared/category.service';
-import { Entry } from '../shared/entry.model';
-import { EntryService } from '../shared/entry.service';
+import { Component, OnInit, Injector } from '@angular/core';
+import { Validators } from "@angular/forms";
+
+import { BaseResourceFormComponent } from "../../../shared/components/base-resource-form/base-resource-form.component"
+
+import { Entry } from "../shared/entry.model";
+import { EntryService } from "../shared/entry.service";
+
+import { Category } from "../../categories/shared/category.model";
+import { CategoryService } from "../../categories/shared/category.service";
 
 @Component({
   selector: 'app-entry-form',
   templateUrl: './entry-form.component.html',
   styleUrls: ['./entry-form.component.css']
 })
-export class EntryFormComponent extends BaseResourceFormComponent<Entry> {
+export class EntryFormComponent extends BaseResourceFormComponent<Entry> implements OnInit{
 
-  categories: Array<Category> = [];
-  typesArray: any;
+  categories: Array<Category>;
 
-
-  imaskconfig = {
+  imaskConfig = {
     mask: Number,
     scale: 2,
     thousandsSeparator: '',
     padFractionalZeros: true,
     normalizeZeros: true,
     radix: ','
+  };
+
+  ptBR = {
+    firstDayOfWeek: 0,
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    dayNamesMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
+    monthNames: [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho',
+      'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    today: 'Hoje',
+    clear: 'Limpar'
   }
 
   constructor(
@@ -35,37 +46,15 @@ export class EntryFormComponent extends BaseResourceFormComponent<Entry> {
     protected categoryService: CategoryService,
     protected injector: Injector
   ) {
-    super(injector, entryService, new Entry)
+    super(injector, new Entry(), entryService, Entry.fromJson)
   }
 
-  protected buildResourceForm(): void {
+  ngOnInit() {
     this.loadCategories();
-    this.typesArray = this.typeOptions();
-
-    this.resourceForm = this.formBuilder.group({
-      id: [null],
-      name: [null, [Validators.required, Validators.min(2)]],
-      description: [null],
-      type: ["expense", [Validators.required]],
-      amount: [null, [Validators.required]],
-      date: [null, [Validators.required]],
-      paid: [true, [Validators.required]],
-      categoryId: [null, [Validators.required]],
-    })
+    super.ngOnInit();
   }
 
-  //Overhide
-  protected editionPageTitle(): string {
-    return `Editando entrada: ${this.resource.name ?? '...'}`;
-  }
-
-  //Overhide
-  protected creationPageTitle(): string {
-    return "Nova entrada";
-  }
-
-
-  private typeOptions(): Array<any> {
+  get typeOptions(): Array<any>{
     return Object.entries(Entry.types).map(
       ([value, text]) => {
         return {
@@ -75,11 +64,33 @@ export class EntryFormComponent extends BaseResourceFormComponent<Entry> {
       }
     )
   }
+  
 
-  private loadCategories(): void {
-    this.categoryService.getAll().subscribe(resp => {
-      this.categories = resp;
+  protected buildResourceForm() {
+    this.resourceForm = this.formBuilder.group({
+      id: [null],
+      name: [null, [Validators.required, Validators.minLength(2)]],
+      description: [null],
+      type: ["expense", [Validators.required]],
+      amount: [null, [Validators.required]],
+      date: [null, [Validators.required]],
+      paid: [true, [Validators.required]],
+      categoryId: [null, [Validators.required]]
     });
   }
 
+  private loadCategories(){
+    this.categoryService.getAll().subscribe(
+      categories => this.categories = categories
+    );
+  }
+
+  protected creationPageTitle(): string {
+    return "Cadastro de Novo Lançamento";
+  }
+
+  protected editionPageTitle(): string {
+    const resourceName = this.resource.name || "";
+    return "Editando Lançamento: " + resourceName;
+  }
 }

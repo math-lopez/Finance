@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
-export interface BreadCrumbItem {
+interface BreadCrumbItem {
   text: string;
-  link: string;
+  link?: string;
 }
 
 @Component({
@@ -12,15 +12,16 @@ export interface BreadCrumbItem {
 })
 export class BreadCrumbComponent implements OnInit {
 
-  @Input() items: Array<BreadCrumbItem> = new Array<BreadCrumbItem>();
+  @Input() items: Array<BreadCrumbItem> = [];
 
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnInit() {
   }
 
-  isTheLastItem(e: BreadCrumbItem): boolean {
-    return this.items[this.items.length - 1] == e;
+  isTheLastItem(item: BreadCrumbItem): boolean {
+    const index = this.items.indexOf(item);
+    return index + 1 == this.items.length;
   }
 
 }

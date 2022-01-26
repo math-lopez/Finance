@@ -1,24 +1,35 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 import { BreadCrumbComponent } from './components/bread-crumb/bread-crumb.component';
-import { CategoriesRoutingModule } from '../pages/categories/categories-routing.module';
-import { EntriesRoutingModule } from '../pages/entries/entries-routing.module';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { FormFieldErrorComponent } from './components/form-field-error/form-field-error.component';
+import { ServerErrorMessagesComponent } from './components/server-error-messages/server-error-messages.component';
 
 @NgModule({
-  declarations: [
-    BreadCrumbComponent
-  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CategoriesRoutingModule,
-    EntriesRoutingModule
+    RouterModule
+  ],
+  declarations: [
+    BreadCrumbComponent,
+    PageHeaderComponent,
+    FormFieldErrorComponent,
+    ServerErrorMessagesComponent
   ],
   exports: [
+    // shared modules
     CommonModule,
     ReactiveFormsModule,
-    BreadCrumbComponent
+    RouterModule,
+
+    // shared components
+    BreadCrumbComponent,
+    PageHeaderComponent,
+    FormFieldErrorComponent,
+    ServerErrorMessagesComponent
   ]
 })
 export class SharedModule { }

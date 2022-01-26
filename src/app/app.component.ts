@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { EntryService } from './pages/entries/shared/entry.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +6,5 @@ import { EntryService } from './pages/entries/shared/entry.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Finance';
-
-  constructor(private a: EntryService) { }
+  title = 'finansys';
 }

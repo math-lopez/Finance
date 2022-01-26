@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { EntryFormComponent } from './entry-form/entry-form.component';
-import { EntryListComponent } from './entry-list/entry-list.component';
+import { Routes, RouterModule } from '@angular/router';
+
+import { EntryListComponent } from "./entry-list/entry-list.component";
+import { EntryFormComponent } from "./entry-form/entry-form.component";
 
 const routes: Routes = [
-  { path: '', component: EntryListComponent, pathMatch: 'full' },
-  { path: 'new', component: EntryFormComponent, pathMatch: 'full' },
-  { path: ':id/edit', component: EntryFormComponent, pathMatch: 'full' }
+  { path: '', component: EntryListComponent },
+  { path: 'new', component: EntryFormComponent },
+  { path: ':id/edit', component: EntryFormComponent }
 ];
 
 @NgModule({

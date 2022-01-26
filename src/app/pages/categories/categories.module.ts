@@ -1,19 +1,15 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from "../../shared/shared.module";
 
 import { CategoriesRoutingModule } from './categories-routing.module';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { CategoryFormComponent } from './category-form/category-form.component';
 
-
 @NgModule({
-  declarations: [
-    CategoryListComponent,
-    CategoryFormComponent
-  ],
   imports: [
-    CategoriesRoutingModule,
-    SharedModule
-  ]
+    SharedModule,
+    CategoriesRoutingModule
+  ],
+  declarations: [CategoryListComponent, CategoryFormComponent]
 })
 export class CategoriesModule { }
